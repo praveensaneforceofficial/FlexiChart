@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h2>Chart Generator</h2>
+    <div class="input-group">
+        <label for="chartType">Chart Type</label>
+        <select id="chartType">
+            <option value="bar">Bar Chart</option>
+            <option value="line">Line Chart</option>
+            <option value="pie">Pie Chart</option>
+        </select>
+    </div>
+    <div class="input-group">
+        <label for="data">Chart Data (comma separated)</label>
+        <input type="text" id="data" placeholder="e.g., 10, 20, 30, 40">
+    </div>
+    <div class="input-group">
+        <label for="labels">Labels (comma separated)</label>
+        <input type="text" id="labels" placeholder="e.g., 'Jan', 'Feb', 'Mar'">
+    </div>
+    <button id="generateChart">Generate Chart</button>
+    
+    <script>
+        document.getElementById('generateChart').addEventListener('click', () => {
+            const chartType = document.getElementById('chartType').value;
+            const data = document.getElementById('data').value.split(',').map(Number);
+            const labels = document.getElementById('labels').value.split(',');
+            parent.postMessage({ pluginMessage: { type: 'generateChart', chartType, data, labels } }, '*');
+        });
+    </script>
+</body>
+</html>

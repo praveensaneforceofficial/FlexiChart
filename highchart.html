@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Highcharts Area Chart with Fully Customizable Labels</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<div id="container" style="width:100%; height:400px;"></div>
+
+<script>
+Highcharts.chart('container', {
+    chart: {
+        type: 'area'  // Define chart type as area chart
+    },
+    title: {
+        text: 'Customizable Area Chart'
+    },
+    xAxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        title: {
+            text: 'Months',
+            style: {
+                fontWeight: 'bold',
+                fontSize: '16px',
+                color: '#2E3A87'
+            }
+        },
+        labels: {
+            style: {
+                fontSize: '14px',          // Change font size
+                fontWeight: 'normal',      // Change font weight
+                color: '#FF6347',          // Change font color
+                fontFamily: 'Courier New', // Change font family
+            },
+            rotation: -45,  // Rotate the labels to make them more readable
+            align: 'right'  // Align labels to the right
+        }
+    },
+    yAxis: {
+        title: {
+            text: 'Sales',
+            style: {
+                fontWeight: 'bold',
+                fontSize: '16px',
+                color: '#2E3A87'
+            }
+        },
+        labels: {
+            style: {
+                fontSize: '12px',
+                color: '#4B0082', // Indigo color for y-axis labels
+                fontWeight: 'normal',
+                fontFamily: 'Arial'
+            }
+        }
+    },
+    tooltip: {
+        shared: true,
+        valueSuffix: ' units',
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',  // Dark background for tooltips
+        style: {
+            color: '#fff',  // White text color for tooltips
+            fontSize: '14px' // Font size for tooltip
+        }
+    },
+    plotOptions: {
+        area: {
+            dataLabels: {
+                enabled: true, // Enable data labels
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    color: 'white',  // Set data label color to white
+                    textShadow: '0 0 5px rgba(0,0,0,0.5)' // Add text shadow for visibility
+                },
+                verticalAlign: 'bottom',  // Align data labels to the bottom
+                y: -15,  // Vertical offset for data labels
+                formatter: function() {
+                    return this.y + ' units';  // Add units to data labels
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Sales',
+        data: [30, 50, 70, 100, 120, 140, 160, 180, 200, 220, 240, 260],
+        color: '#00A859', // Set series color
+        fillOpacity: 0.5, // Set fill opacity for area chart
+    }]
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moving Ball with Hover Effects</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+      flex-direction: column;
+    }
+    canvas {
+      border: 2px solid black;
+    }
+    .controls {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h3>Moving Ball - Hover to Change Size</h3>
+  <canvas id="myCanvas" width="500" height="500"></canvas>
+  <div class="controls">
+    <label for="speed">Speed: </label>
+    <input type="range" id="speed" min="1" max="10" value="5">
+    <span id="speedValue">5</span>
+  </div>
+
+  <script>
+    // Get the canvas element and its context
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Ball properties
+    const originalBallRadius = 20;
+    let ballRadius = originalBallRadius; // Initially the ball has the normal size
+    let ballX = canvas.width / 2;
+    let ballY = canvas.height / 2;
+    let dx = 2;
+    let dy = 2;
+    let speed = 5;
+
+    // Function to draw the ball
+    function drawBall() {
+      ctx.beginPath();
+      ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+      ctx.fillStyle = "#0095DD"; // Ball color
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    // Function to update the animation
+    function updateCanvas() {
+      // Clear the canvas for the new frame
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw the ball at the new position
+      drawBall();
+
+      // Update the ball's position based on speed
+      ballX += dx * speed;
+      ballY += dy * speed;
+
+      // Bounce off the edges of the canvas
+      if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) {
+        dx = -dx;
+      }
+      if (ballY + ballRadius > canvas.height || ballY - ballRadius < 0) {
+        dy = -dy;
+      }
+
+      // Request a new frame to animate
+      requestAnimationFrame(updateCanvas);
+    }
+
+    // Function to check if a click is inside the ball
+    function isClickOnBall(mouseX, mouseY) {
+      const distance = Math.sqrt(Math.pow(mouseX - ballX, 2) + Math.pow(mouseY - ballY, 2));
+      return distance <= ballRadius;
+    }
+
+    // Handle mouse click event to detect if the ball was clicked
+    canvas.addEventListener('click', function(event) {
+      // Get mouse click position relative to the canvas
+      const mouseX = event.clientX - canvas.getBoundingClientRect().left;
+      const mouseY = event.clientY - canvas.getBoundingClientRect().top;
+
+      // Check if the click is inside the ball
+      if (isClickOnBall(mouseX, mouseY)) {
+        alert("Dot you touched!");
+      }
+    });
+
+    // Handle speed slider input
+    const speedSlider = document.getElementById("speed");
+    const speedValue = document.getElementById("speedValue");
+
+    speedSlider.addEventListener('input', function() {
+      // Update the speed value from the slider and adjust the speed
+      speed = parseFloat(speedSlider.value);
+      speedValue.textContent = speedSlider.value;
+    });
+
+    // Handle mouse hover over the ball to change its size (density)
+    canvas.addEventListener('mousemove', function(event) {
+      // Get mouse position relative to the canvas
+      const mouseX = event.clientX - canvas.getBoundingClientRect().left;
+      const mouseY = event.clientY - canvas.getBoundingClientRect().top;
+
+      // If the mouse is over the ball, increase its size
+      const distance = Math.sqrt(Math.pow(mouseX - ballX, 2) + Math.pow(mouseY - ballY, 2));
+      if (distance <= ballRadius) {
+        ballRadius = originalBallRadius * 1.5; // Increase size on hover
+      } else {
+        ballRadius = originalBallRadius; // Reset size when mouse leaves
+      }
+    });
+
+    // Start the animation
+    updateCanvas();
+  </script>
+
+</body>
+</html>
