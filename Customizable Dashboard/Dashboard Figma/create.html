@@ -5,9 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fixed Sidebar and Navbar</title>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <!-- jQuery -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+      <!-- GridStack -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack.min.css">
+      <script src="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/gridstack-all.min.js"></script>
+
+  
+      <!-- Bootstrap -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
     <style>
-      
+        .grid-stack-item-content {
+            background-color: #D7EDFF;
+            border: solid 1px;
+            border-color: #0E73F6;
+            border-radius: 6px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .draggable {
+            padding: 10px;
+            margin: 5px;
+            background: #ccc;
+            border: 1px solid #888;
+            cursor: grab;
+        }
+
+        #dropArea{
+            display: flex;
+            align-items: center;
+            height: 100vh;
+        }
     </style>
     <link href="css/createstylesheet.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -41,17 +75,17 @@
         <div class="sidebar-2">
             <div class="title-1">Drag & Drop Widget</div>
             <div class="title-2">
-                <div>Bar Chart</div>
-                <div>Line Chart</div>
-                <div>Horizontal Bar Chart</div>
-                <div>Vertical Line Chart</div>
-                <div>Pie Chart</div>
-                <div>Radar Chart</div>
-                <div>Scatter Chart</div>
-                <div>Circualar Chart</div>
-                <div>Images</div>
-                <div>Text Box</div>
-                <div>Pivot</div>
+                <div class="draggable" draggable="true" data-type="bar_chart">Bar Chart</div>
+                <div class="draggable" draggable="true" data-type="line_chart">Line Chart</div>
+                <div class="draggable" draggable="true" data-type="horizontal_bar_chart">Horizontal Bar Chart</div>
+                <div class="draggable" draggable="true" data-type="vertical_line_chart">Vertical Line Chart</div>
+                <div class="draggable" draggable="true" data-type="pie_chart">Pie Chart</div>
+                <div class="draggable" draggable="true" data-type="radar_chart">Radar Chart</div>
+                <div class="draggable" draggable="true" data-type="scatter_chart">Scatter Chart</div>
+                <div class="draggable" draggable="true" data-type="circular_chart">Circular Chart</div>
+                <div class="draggable" draggable="true" data-type="image">Images</div>
+                <div class="draggable" draggable="true" data-type="text_box">Text Box</div>
+                <div class="draggable" draggable="true" data-type="pivot">Pivot</div>
             </div>
         </div>
 
@@ -78,12 +112,69 @@
             
         </nav>
 
-        <!-- Main Content -->
         <div class="content">
-           
+            <div class="grid-stack" id="dropArea"></div>
         </div>
     </div>
     <script type="text/javascript">
+        $(document).ready(function () {
+            let grid = GridStack.init({
+                float: true,
+                resizable: true,
+                draggable: true
+            }, "#dropArea");
+
+            console.log("✅ GridStack Initialized Successfully");
+
+            // 🏷️ Drag & Drop Setup
+            $(".draggable").on("dragstart", function (event) {
+                event.originalEvent.dataTransfer.setData("widgetType", $(this).data("type"));
+            });
+
+            $("#dropArea").on("dragover", function (event) {
+                event.preventDefault();
+            });
+
+            $("#dropArea").on("drop", function (event) {
+                event.preventDefault();
+                let widgetType = event.originalEvent.dataTransfer.getData("widgetType");
+
+                if (!widgetType) {
+                    console.error("❌ Drag & Drop Error: widgetType is undefined!");
+                    return;
+                }
+
+                let newWidget = getWidgetHtml(widgetType);
+
+                // ✅ Add widget properly
+                grid.addWidget({
+                    content: newWidget,
+                    w: 3,
+                    h: 2
+                });
+
+                console.log(`✅ Widget Added: ${widgetType}`);
+            });
+
+        });
+
+        // 🛠️ Function to return widget HTML based on type
+        function getWidgetHtml(type) {
+            switch (type) {
+                case "bar_chart": return "<div class='grid-stack-item-content'>📊 Bar Chart</div>";
+                case "line_chart": return "<div class='grid-stack-item-content'>📈 Line Chart</div>";
+                case "horizontal_bar_chart": return "<div class='grid-stack-item-content'>📊 Horizontal Bar Chart</div>";
+                case "vertical_line_chart": return "<div class='grid-stack-item-content'>📉 Vertical Line Chart</div>";
+                case "pie_chart": return "<div class='grid-stack-item-content'>🥧 Pie Chart</div>";
+                case "radar_chart": return "<div class='grid-stack-item-content'>📡 Radar Chart</div>";
+                case "scatter_chart": return "<div class='grid-stack-item-content'>🔢 Scatter Chart</div>";
+                case "circular_chart": return "<div class='grid-stack-item-content'>⭕ Circular Chart</div>";
+                case "image": return "<div class='grid-stack-item-content'><img src='icon/sample-image.png' width='100'></div>";
+                case "text_box": return "<div class='grid-stack-item-content'><textarea placeholder='Enter text'></textarea></div>";
+                case "pivot": return "<div class='grid-stack-item-content'>📊 Pivot Table</div>";
+                default: return "<div class='grid-stack-item-content'>📦 Unknown Widget</div>";
+            }
+        }
 
         document.getElementById("editableLabel").addEventListener("dblclick", function () {
             let label = this;
@@ -106,32 +197,11 @@
             input.classList.add("d-none");
         });
 
-        
-        function filterTable(status) {
-            const rows = document.querySelectorAll("tbody tr");
-            document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-
-            if (status === "active") {
-                document.querySelector(".tab:nth-child(2)").classList.add("active");
-                rows.forEach(row => {
-                    row.style.display = row.classList.contains("active-row") ? "" : "none";
-                });
-            } else if (status === "inactive") {
-                document.querySelector(".tab:nth-child(3)").classList.add("active");
-                rows.forEach(row => {
-                    row.style.display = row.classList.contains("inactive-row") ? "" : "none";
-                });
-            } else {
-                document.querySelector(".tab:nth-child(1)").classList.add("active");
-                rows.forEach(row => {
-                    row.style.display = "";
-                });
-            }
-        }
+   
 
     </script>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"></script>
+
 </body>
 </html>

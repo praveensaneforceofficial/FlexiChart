@@ -301,3 +301,16 @@
     filter: brightness(0) saturate(100%) invert(28%) sepia(98%) saturate(2833%) hue-rotate(216deg) brightness(92%) contrast(94%);
 }
 
+.draggable {
+    cursor: grab;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+}
+.widget {
+    padding: 10px;
+    margin: 5px;
+    background: #e3f2fd;
+    border: 1px solid #2196F3;
+}
